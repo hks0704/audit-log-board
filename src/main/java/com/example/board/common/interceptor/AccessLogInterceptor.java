@@ -27,9 +27,9 @@ public class AccessLogInterceptor implements HandlerInterceptor {
 		HttpServletResponse response,
 		Object handler) {
 
-		ClientInfo clientInfo = clientInfoExtractor.extract(request);
+		request.setAttribute("startTime", System.currentTimeMillis());
 
-		log.info("핸들러가 접속 로그 관련 정보를 입력하였습니다.");
+		ClientInfo clientInfo = clientInfoExtractor.extract(request);
 
 		accessLogService.create(clientInfo);
 
@@ -43,7 +43,12 @@ public class AccessLogInterceptor implements HandlerInterceptor {
 		Object handler,
 		@Nullable Exception ex) {
 
-		long startTime = (Long) request.getAttribute("startTime");
+		Long startTime = (Long) request.getAttribute("startTime");
+
+		if (startTime == null) {
+			return;
+		}
+
 		long duration = System.currentTimeMillis()- startTime;
 
 		log.info("time={}ms ip={} uri={}",
