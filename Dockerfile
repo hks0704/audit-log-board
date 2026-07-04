@@ -1,5 +1,4 @@
-# OpenJDK 17을 포함하는 경량화된 Alpine Linux 베이스 이미지 사용
-FROM openjdk:17-jdk-bullseye
+FROM eclipse-temurin:17-jdk
 
 # 컨테이너 내부의 작업 디렉토리를 /home/app로 설정
 WORKDIR /home/app
