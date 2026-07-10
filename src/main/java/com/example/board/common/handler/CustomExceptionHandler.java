@@ -27,4 +27,5 @@ public class CustomExceptionHandler {
 		return ResponseEntity.status(802)
 			.body(CommonResponse.error(802));
 	}
+
 }

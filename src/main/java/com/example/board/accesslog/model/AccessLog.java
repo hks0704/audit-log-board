@@ -3,6 +3,7 @@ package com.example.board.accesslog.model;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Immutable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Immutable
 @Table(name = "access_log")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
