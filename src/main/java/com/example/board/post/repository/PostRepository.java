@@ -2,17 +2,77 @@ package com.example.board.post.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.board.post.dto.PostDetailResponseDto;
+import com.example.board.post.dto.PostListResponseDto;
 import com.example.board.post.model.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+
+
+
+	// 좋아요 결과를 포함한 내용을 Dto로 출력
+	@Query(value = """
+		select new com.example.board.post.dto.PostListResponseDto(
+		p.id, p.title, p.createdDate, p.updatedDate, count(pl.id)
+		)
+		from Post p
+		left join PostLike pl
+		on p.id = pl.post.id
+		group by 
+		p.id, p.title, p.createdDate, p.updatedDate
+		order by p.createdDate desc
+		""")
+	List<PostListResponseDto> findAllPostListResponseDtos();
+
+	@Query(value = """
+		select new com.example.board.post.dto.PostDetailResponseDto(
+		p.id, p.title, p.content, p.createdDate, p.updatedDate, count(pl.id)
+		)
+		from Post p
+		left join PostLike pl
+		on p.id = pl.post.id
+		group by 
+		p.id, p.title, p.content, p.createdDate, p.updatedDate
+		order by p.createdDate desc
+		""")
+	List<PostDetailResponseDto> findAllPostDetailListResponseDtos();
+
+	@Query(value = """
+		select new com.example.board.post.dto.PostListResponseDto(
+		p.id, p.title, p.createdDate, p.updatedDate, count(pl.id)
+		)
+		from Post p
+		left join PostLike pl
+		on p.id = pl.post.id
+		where p.title = :title
+		group by 
+		p.id, p.title, p.createdDate, p.updatedDate
+		order by p.createdDate desc
+		""")
+	List<PostListResponseDto> findPostListResponseDtosByTitle(@Param("title") String title);
+
+	@Query(value = """
+		select new com.example.board.post.dto.PostListResponseDto(
+		p.id, p.title, p.createdDate, p.updatedDate, count(pl.id)
+		)
+		from Post p
+		left join PostLike pl
+		on p.id = pl.post.id
+		where p.content = :content
+		group by 
+		p.id, p.title, p.createdDate, p.updatedDate
+		order by p.createdDate desc
+		""")
+	List<PostListResponseDto> findPostListResponseDtosByContent(@Param("content") String content);
 
 	// 기본 메서드
 	List<Post> findByTitle(String title);

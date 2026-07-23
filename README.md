@@ -42,7 +42,22 @@ Spring Boot 기반으로 구현한 학습용 게시판 프로젝트입니다.
 - `X-Forwarded-For` 기반 실제 클라이언트 IP 추적
 - Controller 레벨과 인프라 레벨 관심사 분리
 - 로그를 통한 요청 흐름 분석 가능 구조
-
+- 게시글의 좋아요 구현시 N+1 문제를 해결하기 위한 JPQL 쿼리
+```java
+@Query(value = """
+		select new com.example.board.post.dto.PostListResponseDto(
+		p.id, p.title, p.createdDate, p.updatedDate, count(pl.id)
+		)
+		from Post p
+		left join PostLike pl
+		on p.id = pl.post.id
+		where p.title = :title
+		group by 
+		p.id, p.title, p.createdDate, p.updatedDate
+		order by p.createdDate desc
+		""")
+	List<PostListResponseDto> findPostListResponseDtosByTitle(@Param("title") String title);
+```
 ---
 ## 🧩 프로젝트 QNA
 

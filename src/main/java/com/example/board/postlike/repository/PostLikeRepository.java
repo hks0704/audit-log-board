@@ -9,6 +9,8 @@ import com.example.board.postlike.model.PostLike;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
+	Long deleteByPost(Post post);
+
 	Long countByPost(Post post);
 
 	Optional<PostLike> findByUserAgentHash(String userAgentHash);

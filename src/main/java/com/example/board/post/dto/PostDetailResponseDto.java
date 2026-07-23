@@ -19,12 +19,14 @@ public class PostDetailResponseDto {
 	private String content;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
+	private Long postLikeCount;
 
-	public PostDetailResponseDto(Post entity) {
+	public PostDetailResponseDto(Post entity, Long postLikeCount) {
 		this.id = entity.getId();
 		this.title = entity.getTitle();
 		this.content = entity.getContent();
 		this.createdDate = entity.getCreatedDate();
 		this.updatedDate = entity.getUpdatedDate();
+		this.postLikeCount = postLikeCount;
 	}
 }
