@@ -20,6 +20,8 @@ import com.example.board.post.dto.PostListResponseDto;
 import com.example.board.post.dto.PostUpdateRequestDto;
 import com.example.board.post.service.PostReadService;
 import com.example.board.post.service.PostWriteService;
+import com.example.board.postlike.dto.PostLikeDetailResponseDto;
+import com.example.board.postlike.service.PostLikeService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class PostControllerV2 {
 
 	private final PostReadService postReadService;
 	private final PostWriteService postWriteService;
+	private final PostLikeService postLikeService;
 
 	@GetMapping("/list")
 	public ResponseEntity<CommonResponse<?>> getOverviewPosts() {
@@ -68,5 +71,13 @@ public class PostControllerV2 {
 	public ResponseEntity<CommonResponse<?>> deletePost(@PathVariable Long id) {
 		postWriteService.delete(id);
 		return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.success());
+	}
+
+	// POST /articles/15/like
+	@PostMapping("/like/{id}")
+	public ResponseEntity<CommonResponse<?>> createPostLike(@PathVariable Long id, HttpServletRequest request) {
+
+		PostLikeDetailResponseDto responseDto = postLikeService.create(request, id);
+		return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.success(responseDto));
 	}
 }

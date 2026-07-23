@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import com.example.board.common.exception.CustomValidateException;
+import com.example.board.common.util.MaskingUtil;
 import com.example.board.geo.dto.GeoApiResponse;
 import com.example.board.geo.dto.GeoInfo;
 import com.example.board.geo.mapper.IpInfoMapper;
@@ -26,11 +27,13 @@ public class IpApiGeoLocationService implements GeoLocationService {
 	@Override
 	public GeoInfo lookup(String clientIp) {
 
+		log.info("Geo lookup request. clientIp={}", MaskingUtil.maskIp(clientIp));
+
 		InetAddress address = null;
 		try {
 			address = InetAddress.getByName(clientIp);
 		} catch (UnknownHostException e) {
-			log.warn("IP Parsing Failed. ip={}", clientIp, e);
+			log.warn("IP Parsing Failed. ip={}", MaskingUtil.maskIp(clientIp), e);
 			return GeoInfo.unknown();
 		}
 
@@ -47,6 +50,11 @@ public class IpApiGeoLocationService implements GeoLocationService {
 			.retrieve()
 			.body(GeoApiResponse.class);
 
-		return ipInfoMapper.toGeoInfo(response);
+		log.debug("Geo API response={}", response);
+
+		GeoInfo geoInfo = ipInfoMapper.toGeoInfo(response);
+
+		log.debug("Converted GeoInfo={}", geoInfo);
+		return geoInfo;
 	}
 }
